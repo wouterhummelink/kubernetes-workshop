@@ -1,0 +1,24 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: mariadb
+spec:
+  volumes:
+    - name: mariadb-storage
+      persistentVolumeClaim:
+       claimName: mariadb-pvc
+  containers:
+    - name: mariadb
+      image: mariadb
+      env:
+      - name: MYSQL_ROOT_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: mariadb-secret
+            key: mariadb-root-password
+      ports:
+        - containerPort: 3128
+          name: "mysql"
+      volumeMounts:
+        - mountPath: "/var/lib/mysql"
+          name: mariadb-storage
